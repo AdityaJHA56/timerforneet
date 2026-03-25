@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Countdown Widget</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f172a">
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+    }
+
+    body {
+        height: 100vh;
+        background: linear-gradient(135deg, #0f172a, #1e293b);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .widget {
+        backdrop-filter: blur(8px); /* reduced for performance */
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 25px;
+        padding: 30px;
+        width: 300px;
+        text-align: center;
+        color: white;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    }
+
+    .title {
+        font-size: 18px;
+        opacity: 0.8;
+        margin-bottom: 10px;
+    }
+
+    .time {
+        font-size: 36px;
+        font-weight: bold;
+        margin: 15px 0;
+    }
+
+    .labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        opacity: 0.6;
+    }
+
+    .progress-bar {
+        height: 6px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 10px;
+        margin-top: 20px;
+        overflow: hidden;
+    }
+
+    .progress {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #38bdf8, #6366f1);
+        transition: width 1s linear;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="widget">
+    <div class="title">ಥ_ಥ NEET</div>
+
+    <div class="time" id="timer">Loading...</div>
+
+    <div class="labels">
+        <span>Days</span>
+        <span>Hours</span>
+        <span>Minutes</span>
+        <span>Seconds</span>
+    </div>
+
+    <div class="progress-bar">
+        <div class="progress" id="progress"></div>
+    </div>
+</div>
+
+<script>
+const startDate = new Date("March 19, 2026 15:40:00").getTime();
+const targetDate = new Date("May 2, 2026 22:00:00").getTime();
+
+let lastSecond = -1;
+
+function update() {
+    const now = Date.now();
+    const diff = targetDate - now;
+
+    if (diff <= 0) {
+        document.getElementById("timer").innerHTML = "🚀 Time's up!";
+        document.getElementById("progress").style.width = "100%";
+        return;
+    }
+
+    const totalSeconds = Math.floor(diff / 1000);
+
+    if (totalSeconds !== lastSecond) {
+        lastSecond = totalSeconds;
+
+        const days = Math.floor(totalSeconds / 86400);
+        const hours = Math.floor((totalSeconds % 86400) / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+
+        document.getElementById("timer").innerHTML =
+            `${days} : ${hours} : ${minutes} : ${seconds}`;
+
+        const total = targetDate - startDate;
+        const elapsed = now - startDate;
+        const percent = (elapsed / total) * 100;
+
+        document.getElementById("progress").style.width = percent + "%";
+    }
+
+    requestAnimationFrame(update);
+}
+
+update();
+</script>
+
+</body>
+</html>
